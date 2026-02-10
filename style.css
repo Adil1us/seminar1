@@ -1,0 +1,26 @@
+main {
+    display: flex;
+    flex-direction: column; /* Выстраиваем секции в колонку */
+    gap: 60px; /* Единое расстояние между всеми секциями сразу */
+}
+
+.hero-section {
+    position: relative; /* Чтобы позиционировать canvas внутри */
+    background-color: #050505; /* Темный фон */
+    height: 100vh;
+    overflow: hidden;
+}
+
+#web-canvas {
+    position: absolute;
+    top: 0;
+    right: auto;
+    width: 1100px; /* Размер области эффекта */
+    height: 595px;
+    z-index: 0; /* На заднем плане */
+    pointer-events: none; /* Пропускает клики сквозь себя */
+    
+    /* Опционально: плавное исчезновение краев, чтобы не было жесткого квадрата */
+    mask-image: radial-gradient(circle at top right, black 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at top right, black 60%, transparent 100%);
+}
