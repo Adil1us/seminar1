@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Секреты производства (ноу-хау)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f4f1ea;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a0;
+    --rust: #8b3a2a;
+    --slate: #2c3e50;
+    --muted: #7a7060;
+    --line: rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    background: var(--slate);
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 0; bottom: 0;
+    width: 80px;
+    background: var(--paper);
+    clip-path: polygon(100% 0, 100% 100%, 0 50%);
+    z-index: 2;
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-size: clamp(52px, 6vw, 86px);
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.55);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 28px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .hero-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px 60px 100px;
+    position: relative;
+  }
+
+  /* Big lock icon */
+  .lock-glyph {
+    font-size: 240px;
+    line-height: 1;
+    color: rgba(0,0,0,0.05);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .hero-essence {
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--slate);
+    max-width: 420px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .hero-essence strong {
+    font-weight: 600;
+    color: var(--rust);
+  }
+
+  /* ── NAV PILLS ── */
+  .nav-pills {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(244, 241, 234, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 60px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    animation: fadeDown 0.6s ease forwards 1s;
+    opacity: 0;
+  }
+
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .pill:hover {
+    background: var(--slate);
+    color: #fff;
+    border-color: var(--slate);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 100px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gold-light);
+    max-width: 60px;
+  }
+
+  .section-title {
+    font-size: clamp(38px, 4vw, 62px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 48px;
+  }
+
+  .section-title em { font-style: italic; color: var(--rust); }
+
+  /* ── KEY INSIGHT ── */
+  .insight-box {
+    background: var(--slate);
+    color: #fff;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .insight-box::before {
+    content: '§';
+    position: absolute;
+    right: 40px;
+    top: -20px;
+    font-size: 240px;
+    color: rgba(255,255,255,0.04);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+  }
+
+  .insight-box .section-tag { color: var(--gold-light); }
+  .insight-box .section-tag::after { background: var(--gold); }
+
+  .insight-text {
+    font-size: clamp(26px, 3.2vw, 40px);
+    font-weight: 300;
+    line-height: 1.55;
+    max-width: 800px;
+  }
+
+  .insight-text strong { color: var(--gold-light); font-weight: 600; }
+
+  /* ── FORMS GRID ── */
+  .forms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin: 48px 0;
+  }
+
+  .form-card {
+    background: var(--paper);
+    padding: 40px 32px;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .form-card:hover { background: #fff; }
+
+  .form-card-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .form-card-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--slate);
+    margin-bottom: 12px;
+  }
+
+  .form-card-desc {
+    font-size: 20px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .form-card-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-top: 16px;
+    background: var(--gold-light);
+    color: var(--rust);
+  }
+
+  /* ── FEATURE ROW ── */
+  .feature-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    padding: 80px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .feature-row:first-of-type { border-top: none; }
+
+  .feature-visual {
+    position: relative;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── INFOGRAPHIC VISUALS ── */
+
+  /* Monopoly comparison */
+  .mono-chart {
+    display: flex;
+    gap: 32px;
+    align-items: flex-end;
+    height: 200px;
+  }
+  .bar-wrap { text-align: center; }
+  .bar {
+    width: 80px;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    transition: opacity 0.3s;
+  }
+  .bar-patent { height: 180px; background: var(--slate); }
+  .bar-know { height: 100px; background: var(--gold); }
+  .bar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    color: var(--muted);
+  }
+  .bar-caption {
+    font-size: 11px;
+    color: rgba(0,0,0,0.4);
+    margin-top: 4px;
+  }
+  .bar::after {
+    content: attr(data-val);
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Confidentiality lifecycle */
+  .lifecycle {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    max-width: 380px;
+  }
+  .lc-step {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 0;
+    border-left: 2px solid var(--gold-light);
+    padding-left: 24px;
+    position: relative;
+  }
+  .lc-step::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  .lc-step.danger { border-left-color: var(--rust); }
+  .lc-step.danger::before { background: var(--rust); }
+  .lc-step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .lc-step-title { font-size: 22px; font-weight: 600; color: var(--slate); }
+  .lc-step-desc { font-size: 17px; color: var(--muted); margin-top: 2px; }
+
+  /* Risk meter */
+  .risk-meter {
+    width: 220px;
+    height: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .risk-meter svg { position: absolute; top: 0; left: 0; }
+
+  .risk-center {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .risk-value {
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--rust);
+    line-height: 1;
+  }
+  .risk-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Multi-owner diagram */
+  .multi-owner {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .owner-node {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 15px;
+    text-align: center;
+    color: var(--slate);
+    gap: 4px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .owner-node .node-icon { font-size: 28px; }
+  .owner-node.center {
+    width: 120px;
+    height: 120px;
+    background: var(--slate);
+    border-color: var(--slate);
+    color: var(--gold-light);
+    font-size: 14px;
+  }
+  .plus-sign {
+    font-size: 36px;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  /* ── RISKS PANEL ── */
+  #risks {
+    background: #fff;
+    border-top: 4px solid var(--rust);
+    padding: 80px 60px;
+  }
+
+  .risks-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .risks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  .risk-card {
+    border: 1px solid var(--line);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .risk-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--rust);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .risk-card:hover::before { transform: scaleX(1); }
+
+  .risk-card-icon {
+    font-size: 44px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .risk-card-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--slate);
+    margin-bottom: 10px;
+  }
+  .risk-card-text { font-size: 20px; color: var(--muted); line-height: 1.65; }
+
+  /* ── CONCLUSION ── */
+  .conclusion {
+    background: var(--ink);
+    padding: 100px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conclusion::before {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    right: -20px;
+    font-size: 140px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.02);
+    line-height: 1;
+    letter-spacing: -4px;
+    user-select: none;
+  }
+
+  .conclusion-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .summary-item {
+    background: rgba(255,255,255,0.03);
+    padding: 32px 24px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .summary-item:hover { background: rgba(255,255,255,0.07); }
+
+  .summary-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+  .summary-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .summary-text { font-size: 18px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+  .conclusion-heading {
+    font-size: clamp(34px, 3.6vw, 56px);
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.3;
+    max-width: 700px;
+  }
+  .conclusion-heading em { font-style: italic; color: var(--gold-light); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left::after { display: none; }
+    .hero-right { padding: 60px 40px; }
+    .forms-grid { grid-template-columns: 1fr; }
+    .feature-row { grid-template-columns: 1fr; gap: 32px; }
+    .risks-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-pills { padding: 14px 24px; }
+    .section { padding: 60px 24px; }
+    .insight-box { padding: 40px 24px; }
+    #risks { padding: 60px 24px; }
+    .conclusion { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-label">Интеллектуальные права · Российское право</div>
+    <h1 class="hero-title">Секреты<br>производства<br><em>(ноу-хау)</em></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">Особенности распоряжения<br>исключительными правами</p>
+  </div>
+  <div class="hero-right">
+    <div class="lock-glyph">🔒</div>
+    <p class="hero-essence">
+      В отличие от патентов, правовая охрана ноу-хау держится не на регистрации,
+      а на <strong>сохранении конфиденциальности</strong>. Раскрытие информации —
+      мгновенная утрата всех прав.
+    </p>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav-pills">
+  <a class="pill" href="#general">Общая специфика</a>
+  <a class="pill" href="#forms">Формы распоряжения</a>
+  <a class="pill" href="#rules">Ограничения</a>
+  <a class="pill" href="#risks">Риски</a>
+  <a class="pill" href="#conclusion">Итоги</a>
+</nav>
+
+<!-- GENERAL INSIGHT -->
+<div class="insight-box reveal" id="general">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-tag">01 · Ключевая особенность</div>
+    <p class="insight-text">
+      Существование исключительного права на ноу-хау <strong>прямо зависит от режима коммерческой тайны</strong>.
+      Если сведения становятся общедоступными — право прекращается <strong>автоматически</strong>,
+      независимо от того, какие договоры были заключены.
+    </p>
+  </div>
+</div>
+
+<!-- FORMS OF DISPOSAL -->
+<div class="section reveal" id="forms">
+  <div class="section-tag">02 · Формы распоряжения</div>
+  <h2 class="section-title">Три способа<br><em>передать права</em></h2>
+  <div class="forms-grid">
+    <div class="form-card">
+      <span class="form-card-number">01</span>
+      <div class="form-card-title">Отчуждение исключительного права</div>
+      <p class="form-card-desc">Право полностью переходит к другому лицу. Прежний правообладатель теряет возможность использовать секрет производства.</p>
+      <span class="form-card-badge">Применяется редко</span>
+    </div>
+    <div class="form-card">
+      <span class="form-card-number">02</span>
+      <div class="form-card-title">Лицензионный договор</div>
+      <p class="form-card-desc">Правообладатель сохраняет право, но разрешает использование ноу-хау. Обязательны условия о неразглашении и способах использования.</p>
+      <span class="form-card-badge">Наиболее распространён</span>
+    </div>
+    <div class="form-card">
+      <span class="form-card-number">03</span>
+      <div class="form-card-title">Трудовые и ГП договоры</div>
+      <p class="form-card-desc">Работники и подрядчики получают доступ только для выполнения обязанностей. Самостоятельных прав на ноу-хау они не приобретают.</p>
+      <span class="form-card-badge">Ограниченный доступ</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE: NO REGISTRATION -->
+<div class="section reveal">
+  <div class="feature-row">
+    <div>
+      <div class="section-tag">03 · Процедура</div>
+      <h2 class="section-title">Никакой<br><em>регистрации</em></h2>
+      <p style="color:var(--muted);font-size:21px;line-height:1.7;">
+        Сделки с ноу-хау не требуют государственной регистрации. Защита прав правообладателя
+        целиком зависит от содержания договоров и от фактически принятых мер по охране информации.
+        Это гибко — но уязвимо.
+      </p>
+    </div>
+    <div class="feature-visual">
+      <div class="lifecycle reveal">
+        <div class="lc-step">
+          <div>
+            <div class="lc-step-label">Этап 1</div>
+            <div class="lc-step-title">Фиксация тайны</div>
+            <div class="lc-step-desc">Ввод режима коммерческой тайны</div>
+          </div>
+        </div>
+        <div class="lc-step">
+          <div>
+            <div class="lc-step-label">Этап 2</div>
+            <div class="lc-step-title">Заключение договора</div>
+            <div class="lc-step-desc">Лицензия или отчуждение без регистрации</div>
+          </div>
+        </div>
+        <div class="lc-step">
+          <div>
+            <div class="lc-step-label">Этап 3</div>
+            <div class="lc-step-title">Использование</div>
+            <div class="lc-step-desc">Строгое соблюдение конфиденциальности</div>
+          </div>
+        </div>
+        <div class="lc-step danger">
+          <div>
+            <div class="lc-step-label">Критический момент</div>
+            <div class="lc-step-title">Разглашение = конец</div>
+            <div class="lc-step-desc">Право прекращается автоматически</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE: MULTIPLICITY -->
+<div class="section reveal" id="rules">
+  <div class="feature-row" style="border-top: 1px solid var(--line);">
+    <div class="feature-visual">
+      <div class="multi-owner reveal">
+        <div class="owner-node">
+          <span class="node-icon">🏭</span>
+          <span>Субъект А</span>
+        </div>
+        <div class="plus-sign">+</div>
+        <div class="owner-node center">
+          <span style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">Одно<br>ноу-хау</span>
+        </div>
+        <div class="plus-sign">+</div>
+        <div class="owner-node">
+          <span class="node-icon">🔬</span>
+          <span>Субъект Б</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-tag">04 · Множественность прав</div>
+      <h2 class="section-title">Нет<br><em>абсолютной монополии</em></h2>
+      <p style="color:var(--muted);font-size:21px;line-height:1.7;">
+        Если разные субъекты добросовестно и самостоятельно получили одинаковые сведения,
+        каждый приобретает <em>собственное</em> исключительное право. В отличие от патентного права,
+        ноу-хау не создаёт монополии против тех, кто пришёл к тому же результату независимо.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- RISKS -->
+<div id="risks">
+  <div class="risks-inner">
+    <div class="section-tag" style="color:var(--rust);">05 · Риски
+      <span style="flex:1;height:1px;background:var(--rust);opacity:0.3;max-width:60px;display:block;"></span>
+    </div>
+    <h2 class="section-title">Повышенная<br><em>уязвимость</em></h2>
+    <div class="risks-grid">
+      <div class="risk-card reveal">
+        <span class="risk-card-icon">💥</span>
+        <div class="risk-card-title">Необратимая утрата</div>
+        <p class="risk-card-text">Разглашение информации — даже случайное — автоматически прекращает исключительное право. Никакой договор не поможет его восстановить.</p>
+      </div>
+      <div class="risk-card reveal">
+        <span class="risk-card-icon">⚖️</span>
+        <div class="risk-card-title">Ограниченная защита</div>
+        <p class="risk-card-text">Право действует только против тех, кто получил информацию незаконно. Добросовестных пользователей тех же сведений запретить нельзя.</p>
+      </div>
+      <div class="risk-card reveal">
+        <span class="risk-card-icon">📄</span>
+        <div class="risk-card-title">Зависимость от договора</div>
+        <p class="risk-card-text">Без регистрации защита полностью опирается на качество договорных условий. Плохой договор = плохая защита.</p>
+      </div>
+      <div class="risk-card reveal">
+        <span class="risk-card-icon">🔄</span>
+        <div class="risk-card-title">Параллельный поиск</div>
+        <p class="risk-card-text">Конкурент, самостоятельно пришедший к тому же решению, приобретает равные права — и вы не сможете этому воспрепятствовать.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONCLUSION -->
+<div class="conclusion" id="conclusion">
+  <div class="conclusion-inner">
+    <div class="section-tag" style="color:var(--gold);">06 · Итоги</div>
+    <h2 class="conclusion-heading">Гибкость и уязвимость —<br><em>две стороны одной монеты</em></h2>
+    <div class="summary-grid reveal">
+      <div class="summary-item">
+        <span class="summary-icon">🚫</span>
+        <div class="summary-label">Нет регистрации</div>
+        <p class="summary-text">Сделки заключаются без государственных процедур — гибко, но без формальных гарантий</p>
+      </div>
+      <div class="summary-item">
+        <span class="summary-icon">🔐</span>
+        <div class="summary-label">Тайна = право</div>
+        <p class="summary-text">Исключительное право существует ровно до тех пор, пока информация остаётся конфиденциальной</p>
+      </div>
+      <div class="summary-item">
+        <span class="summary-icon">👥</span>
+        <div class="summary-label">Множественность</div>
+        <p class="summary-text">Несколько лиц могут иметь независимые права на одно и то же ноу-хау одновременно</p>
+      </div>
+      <div class="summary-item">
+        <span class="summary-icon">⚡</span>
+        <div class="summary-label">Высокий риск</div>
+        <p class="summary-text">Любое разглашение — даже без злого умысла — ведёт к мгновенной и необратимой утрате прав</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Intersection Observer for reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
