@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GreenDesk — Экологичное рабочее пространство</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --forest: #1c3a2a;
+    --sage: #5a7a5e;
+    --sage-light: #8aab8e;
+    --cream: #f4efe6;
+    --warm-white: #faf8f4;
+    --wood: #c8a87a;
+    --wood-light: #e2caa8;
+    --charcoal: #2a2a2a;
+    --muted: #6b6b6b;
+    --border: rgba(90,122,94,0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ─── TYPOGRAPHY ─── */
+  .display { font-family: 'Cormorant Garamond', serif; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 32px rgba(28,58,42,0.08); }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--forest); text-decoration: none;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo span { color: var(--sage); }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--charcoal);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--sage); }
+  .nav-cta {
+    background: var(--forest); color: var(--cream);
+    padding: 0.6rem 1.6rem; border-radius: 2rem;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+    text-decoration: none; transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--sage); transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative; overflow: hidden;
+    background: var(--cream);
+  }
+  .hero-bg-decor {
+    position: absolute; right: -120px; top: -80px;
+    width: 620px; height: 620px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(90,122,94,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-bg-leaf {
+    position: absolute; bottom: -60px; left: 60px;
+    font-size: 22rem; opacity: 0.04; pointer-events: none;
+    color: var(--forest); line-height: 1; user-select: none;
+  }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(90,122,94,0.12); color: var(--sage);
+    padding: 0.4rem 1rem; border-radius: 2rem;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+    border: 1px solid rgba(90,122,94,0.25);
+  }
+  .hero-badge::before { content: '🌿'; font-size: 1rem; }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--forest); margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .hero-title em { font-style: italic; color: var(--sage); }
+  .hero-subtitle {
+    font-size: 1.05rem; color: var(--muted);
+    line-height: 1.7; max-width: 480px; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+  .btn-primary {
+    background: var(--forest); color: var(--cream);
+    padding: 0.9rem 2.2rem; border-radius: 2rem;
+    font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; display: inline-block;
+    transition: all 0.25s; border: none; cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { background: var(--sage); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,58,42,0.2); }
+  .btn-outline {
+    background: transparent; color: var(--forest);
+    padding: 0.9rem 2.2rem; border-radius: 2rem;
+    font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; display: inline-block;
+    transition: all 0.25s; border: 2px solid var(--forest); cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .btn-outline:hover { background: var(--forest); color: var(--cream); }
+  .hero-stats { display: flex; gap: 2.5rem; }
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 600; color: var(--forest); line-height: 1;
+  }
+  .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.2rem; }
+
+  .hero-visual { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; }
+  .hero-card-stack {
+    display: flex; flex-direction: column; gap: 1rem; width: 360px;
+  }
+  .hero-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .hero-card {
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 12px 36px rgba(28,58,42,0.14);
+  }
+  .hero-card-main {
+    background: linear-gradient(145deg, #2d5a3d, #1c3a2a);
+    padding: 1.6rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 160px;
+  }
+  .hero-card-accent {
+    background: var(--wood-light);
+    padding: 1.4rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 160px;
+    border: 1px solid var(--wood);
+  }
+  .hero-card-wide {
+    background: white; border: 1px solid var(--border);
+    padding: 1.2rem 1.6rem;
+    display: flex; align-items: center; gap: 1.2rem;
+    border-radius: 20px; box-shadow: 0 8px 24px rgba(28,58,42,0.08);
+  }
+  .card-big-icon { font-size: 2.4rem; line-height: 1; }
+  .card-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .hero-card-main .card-label { color: var(--sage-light); }
+  .hero-card-main .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: white; font-weight: 300; }
+  .hero-card-main .card-price { font-size: 1rem; color: var(--wood-light); margin-top: 0.4rem; font-weight: 600; }
+  .hero-card-accent .card-label { color: var(--sage); }
+  .hero-card-accent .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--forest); }
+  .hero-card-accent .card-price { font-size: 0.95rem; color: var(--wood); margin-top: 0.3rem; font-weight: 600; }
+  .wide-icon { font-size: 2rem; flex-shrink: 0; }
+  .wide-label { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+  .wide-name { font-size: 0.95rem; font-weight: 600; color: var(--forest); }
+  .wide-price { font-size: 0.85rem; color: var(--sage); font-weight: 500; margin-top: 0.1rem; }
+  .wide-badge {
+    margin-left: auto; flex-shrink: 0;
+    background: rgba(90,122,94,0.12); color: var(--sage);
+    padding: 0.3rem 0.7rem; border-radius: 2rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; border: 1px solid rgba(90,122,94,0.2);
+  }
+  .eco-badge-float {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: white; border-radius: 50px;
+    padding: 0.45rem 0.9rem;
+    box-shadow: 0 6px 20px rgba(28,58,42,0.12);
+    font-size: 0.75rem; font-weight: 600; color: var(--forest);
+    margin-bottom: 0.8rem; width: fit-content;
+    border: 1px solid var(--border);
+  }
+
+  /* ─── SECTION COMMON ─── */
+  section { padding: 6rem 4rem; }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--sage); font-weight: 600; margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-label::before { content: ''; display: block; width: 24px; height: 2px; background: var(--sage); }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 300;
+    color: var(--forest); line-height: 1.2; margin-bottom: 1rem;
+  }
+  .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 560px; margin-bottom: 3rem; }
+
+  /* ─── ABOUT ─── */
+  #about {
+    background: var(--forest);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+  }
+  #about .section-label { color: var(--sage-light); }
+  #about .section-label::before { background: var(--sage-light); }
+  #about .section-title { color: white; }
+  #about .section-sub { color: rgba(255,255,255,0.65); max-width: none; margin-bottom: 0; }
+  .about-features { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+  .about-feat {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.2rem 1.5rem; border-radius: 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.2s;
+  }
+  .about-feat:hover { background: rgba(255,255,255,0.09); }
+  .feat-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .feat-title { font-size: 0.9rem; font-weight: 600; color: white; margin-bottom: 0.3rem; }
+  .feat-desc { font-size: 0.85rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .about-visual {
+    position: relative; display: flex; justify-content: center;
+  }
+  .about-img-frame {
+    width: 380px; height: 460px; border-radius: 24px;
+    background: linear-gradient(160deg, rgba(138,171,142,0.3) 0%, rgba(200,168,122,0.2) 100%);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    gap: 1rem; position: relative; overflow: hidden;
+  }
+  .about-img-frame::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(138,171,142,0.2) 0%, transparent 70%);
+  }
+  .about-big-emoji { font-size: 7rem; }
+  .about-brand-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: white; font-weight: 300;
+  }
+  .about-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+  .about-dots {
+    position: absolute; bottom: 2rem; right: 2rem;
+    display: grid; grid-template-columns: repeat(3, 8px); gap: 5px;
+  }
+  .about-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+  }
+  .about-dot:nth-child(1) { background: var(--sage-light); }
+
+  /* ─── PRODUCTS ─── */
+  #products { background: var(--warm-white); }
+  .products-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .product-card {
+    background: white; border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(28,58,42,0.12); }
+  .product-card.featured { border-color: var(--sage); border-width: 2px; }
+  .product-img {
+    height: 200px; display: flex; align-items: center; justify-content: center;
+    font-size: 5.5rem; position: relative;
+  }
+  .product-img-organizer { background: linear-gradient(135deg, #e8f0e9, #c8deca); }
+  .product-img-lamp { background: linear-gradient(135deg, #f5f0e0, #e8d9b8); }
+  .product-img-kit { background: linear-gradient(135deg, #f0e8e8, #e4cec0); }
+  .product-tag {
+    position: absolute; top: 1rem; left: 1rem;
+    background: var(--forest); color: white;
+    padding: 0.3rem 0.8rem; border-radius: 2rem;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .product-tag.green { background: var(--sage); }
+  .product-body { padding: 1.5rem; }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; color: var(--forest); margin-bottom: 0.5rem;
+  }
+  .product-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+  .product-meta { display: flex; justify-content: space-between; align-items: center; }
+  .product-price { font-size: 1.1rem; font-weight: 600; color: var(--forest); }
+  .product-price span { font-size: 0.75rem; font-weight: 400; color: var(--muted); }
+  .product-btn {
+    background: var(--cream); color: var(--forest);
+    padding: 0.45rem 1.1rem; border-radius: 2rem;
+    font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border);
+    cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .product-btn:hover { background: var(--forest); color: white; border-color: var(--forest); }
+  .products-row2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; max-width: 680px; }
+  .product-card-small { border-radius: 16px; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .product-small-icon { font-size: 2.5rem; flex-shrink: 0; }
+  .product-small-name { font-size: 0.95rem; font-weight: 600; color: var(--forest); }
+  .product-small-price { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* ─── WHY US ─── */
+  #why {
+    background: var(--cream);
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 6rem; align-items: center;
+  }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .why-card {
+    background: white; border-radius: 20px; padding: 1.8rem;
+    border: 1px solid var(--border); transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .why-card:hover { border-color: var(--sage); box-shadow: 0 8px 24px rgba(90,122,94,0.12); }
+  .why-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+  .why-title { font-size: 0.95rem; font-weight: 600; color: var(--forest); margin-bottom: 0.4rem; }
+  .why-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .why-card.highlight { background: var(--forest); border-color: transparent; }
+  .why-card.highlight .why-title { color: white; }
+  .why-card.highlight .why-text { color: rgba(255,255,255,0.6); }
+
+  /* ─── CERTS ─── */
+  #certs { background: var(--warm-white); text-align: center; }
+  #certs .section-label { justify-content: center; }
+  #certs .section-label::before { display: none; }
+  #certs .section-title { margin: 0 auto; text-align: center; }
+  #certs .section-sub { margin: 0 auto 3rem; text-align: center; }
+  .certs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+  .cert-card {
+    background: white; border-radius: 16px; padding: 1.8rem 1.2rem;
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cert-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(28,58,42,0.1); }
+  .cert-icon { font-size: 2.8rem; }
+  .cert-name { font-size: 0.8rem; font-weight: 700; color: var(--forest); text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .cert-desc { font-size: 0.75rem; color: var(--muted); text-align: center; line-height: 1.4; }
+
+  .certs-strip {
+    margin-top: 3rem; display: flex; align-items: center; justify-content: center;
+    gap: 3rem; padding: 1.5rem 3rem; background: var(--cream); border-radius: 16px;
+    flex-wrap: wrap;
+  }
+  .strip-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--muted); }
+  .strip-item strong { color: var(--forest); }
+
+  /* ─── REVIEWS ─── */
+  #reviews { background: var(--cream); }
+  .reviews-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .review-card {
+    background: white; border-radius: 20px; padding: 2rem;
+    border: 1px solid var(--border); position: relative;
+    transition: box-shadow 0.2s;
+  }
+  .review-card:hover { box-shadow: 0 12px 32px rgba(28,58,42,0.08); }
+  .review-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; color: var(--sage-light);
+    line-height: 0.6; margin-bottom: 1rem; display: block;
+  }
+  .review-text { font-size: 0.92rem; color: var(--charcoal); line-height: 1.7; margin-bottom: 1.5rem; }
+  .review-author { display: flex; align-items: center; gap: 0.8rem; }
+  .review-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .av1 { background: #e8f4e8; }
+  .av2 { background: #f4ede4; }
+  .av3 { background: #e4eaf4; }
+  .av4 { background: #f4e8e8; }
+  .review-name { font-size: 0.85rem; font-weight: 600; color: var(--forest); }
+  .review-role { font-size: 0.75rem; color: var(--muted); }
+  .review-stars { color: #e8b84b; font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .review-tag {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--sage); background: rgba(90,122,94,0.1); padding: 0.25rem 0.7rem; border-radius: 2rem;
+  }
+
+  /* ─── FAQ ─── */
+  #faq { background: var(--warm-white); }
+  .faq-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 6rem; align-items: start; }
+  .faq-list { display: flex; flex-direction: column; gap: 0.8rem; }
+  .faq-item {
+    border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: var(--sage); }
+  .faq-q {
+    width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+    padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--forest);
+  }
+  .faq-arrow { transition: transform 0.3s; font-size: 1rem; color: var(--sage); flex-shrink: 0; margin-left: 1rem; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s;
+    font-size: 0.85rem; color: var(--muted); line-height: 1.7;
+    padding: 0 1.5rem;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 1.5rem 1.2rem; }
+
+  /* ─── CTA BAND ─── */
+  #cta-band {
+    background: linear-gradient(135deg, var(--forest) 0%, #2d5a3d 100%);
+    text-align: center; padding: 5rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  #cta-band::before {
+    content: '🌿';
+    position: absolute; right: 6rem; top: -2rem;
+    font-size: 18rem; opacity: 0.05; pointer-events: none;
+  }
+  #cta-band::after {
+    content: '🌿';
+    position: absolute; left: 4rem; bottom: -3rem;
+    font-size: 14rem; opacity: 0.04; pointer-events: none;
+    transform: scaleX(-1);
+  }
+  .cta-band-label { color: var(--sage-light); font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; margin-bottom: 1rem; }
+  .cta-band-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; color: white;
+    line-height: 1.2; margin-bottom: 1rem;
+  }
+  .cta-band-sub { color: rgba(255,255,255,0.6); font-size: 1rem; max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .cta-band-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-white { background: white; color: var(--forest); padding: 0.9rem 2.2rem; border-radius: 2rem; font-size: 0.95rem; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.2s; }
+  .btn-white:hover { background: var(--cream); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .btn-ghost { background: transparent; color: white; padding: 0.9rem 2.2rem; border-radius: 2rem; font-size: 0.95rem; font-weight: 500; text-decoration: none; display: inline-block; border: 2px solid rgba(255,255,255,0.35); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+  /* ─── LEAD FORM ─── */
+  #lead { background: var(--cream); }
+  .lead-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .lead-form-wrapper {
+    background: white; border-radius: 24px; padding: 2.5rem;
+    border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(28,58,42,0.06);
+  }
+  .form-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--forest); margin-bottom: 0.4rem; }
+  .form-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.8rem; }
+  .form-group { margin-bottom: 1.1rem; }
+  .form-group label { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.4rem; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 0.75rem 1rem; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--warm-white);
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--charcoal);
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--sage); background: white; }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-submit {
+    width: 100%; padding: 0.95rem; border-radius: 12px;
+    background: var(--forest); color: white; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s; letter-spacing: 0.03em;
+    margin-top: 0.5rem;
+  }
+  .form-submit:hover { background: var(--sage); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(28,58,42,0.2); }
+  .form-privacy { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.8rem; line-height: 1.5; }
+  .lead-info .section-sub { max-width: none; }
+  .contact-items { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2rem; }
+  .contact-item { display: flex; align-items: center; gap: 1rem; }
+  .contact-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--forest); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .contact-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .contact-value { font-size: 0.95rem; font-weight: 500; color: var(--forest); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--charcoal); color: white; padding: 3rem 4rem 2rem;
+  }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600;
+    color: white; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem;
+  }
+  .footer-logo span { color: var(--sage-light); }
+  .footer-desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.6; max-width: 240px; }
+  .footer-col h4 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .footer-col a { font-size: 0.85rem; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--sage-light); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; }
+  .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+  .footer-social { display: flex; gap: 0.8rem; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .social-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate { animation: fadeUp 0.7s ease both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  /* ─── SUCCESS MESSAGE ─── */
+  .success-msg {
+    display: none; background: rgba(90,122,94,0.1); border: 1px solid var(--sage);
+    border-radius: 12px; padding: 1rem; text-align: center;
+    font-size: 0.9rem; color: var(--sage); font-weight: 500; margin-top: 0.8rem;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--sage-light); border-radius: 3px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    nav { padding: 1rem 2rem; }
+    section { padding: 4rem 2rem; }
+    #hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
+    .hero-visual { display: none; }
+    #about { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 2rem; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    #why { grid-template-columns: 1fr; gap: 3rem; }
+    .lead-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .faq-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .certs-grid { grid-template-columns: repeat(2, 1fr); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+  }
+  @media (max-width: 640px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    #cta-band { padding: 3rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#">Green<span>Desk</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">О нас</a></li>
+    <li><a href="#products">Каталог</a></li>
+    <li><a href="#why">Преимущества</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a class="nav-cta" href="#lead">Оставить заявку</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg-decor"></div>
+  <div class="hero-bg-leaf">🌿</div>
+
+  <div class="hero-content">
+    <div class="hero-badge animate">Экосертифицированные товары для рабочего стола</div>
+    <h1 class="hero-title animate delay-1">
+      Ваше рабочее<br>место — <em>живое</em><br>и осознанное
+    </h1>
+    <p class="hero-subtitle animate delay-2">
+      GreenDesk — это интернет-магазин стильных и экологичных аксессуаров для работы. Органайзеры, лампы и подставки из дерева, бамбука и переработанных материалов — для дома, офиса и коворкинга.
+    </p>
+    <div class="hero-actions animate delay-3">
+      <a href="#products" class="btn-primary">Смотреть каталог</a>
+      <a href="#lead" class="btn-outline">Получить консультацию</a>
+    </div>
+    <div class="hero-stats animate delay-4">
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Натуральные материалы</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Эко-сертификата</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Пластик в упаковке</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card-stack">
+      <div class="eco-badge-float">🌱 Упаковка без пластика · Эко-сертификат</div>
+      <div class="hero-card-row">
+        <div class="hero-card hero-card-main">
+          <div class="card-big-icon">🗂️</div>
+          <div>
+            <div class="card-label">🏆 Топ продаж</div>
+            <div class="card-name">Органайзер Eco Oak</div>
+            <div class="card-price">от 1 890 ₽</div>
+          </div>
+        </div>
+        <div class="hero-card hero-card-accent">
+          <div class="card-big-icon">💡</div>
+          <div>
+            <div class="card-label">✨ Новинка</div>
+            <div class="card-name">Лампа BambooLight</div>
+            <div class="card-price">2 350 ₽</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-card-wide">
+        <div class="wide-icon">📦</div>
+        <div>
+          <div class="wide-label">Хит сезона</div>
+          <div class="wide-name">Набор Eco-Desk Setup</div>
+          <div class="wide-price">4 990 ₽ — органайзер + лампа + блокнот</div>
+        </div>
+        <div class="wide-badge">🎁 Подарок</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="about-visual">
+    <div class="about-img-frame">
+      <div class="about-big-emoji">🌿</div>
+      <div class="about-brand-name">GreenDesk</div>
+      <div class="about-tagline">Nature × Productivity</div>
+      <div class="about-dots">
+        <div class="about-dot"></div><div class="about-dot"></div><div class="about-dot"></div>
+        <div class="about-dot"></div><div class="about-dot"></div><div class="about-dot"></div>
+        <div class="about-dot"></div><div class="about-dot"></div><div class="about-dot"></div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="section-label">О компании</div>
+    <h2 class="section-title">Осознанный<br>подход к работе</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.65); max-width:none">
+      GreenDesk появился как ответ на запрос людей, которые хотят работать красиво, удобно и без вреда для природы. Каждый товар тщательно отобран, произведён из сертифицированных материалов и упакован без единого грамма пластика.
+    </p>
+    <div class="about-features">
+      <div class="about-feat">
+        <div class="feat-icon">🪵</div>
+        <div>
+          <div class="feat-title">Дерево, бамбук и переработка</div>
+          <div class="feat-desc">Только натуральные и вторичные материалы. Никакого пластика в товарах и упаковке.</div>
+        </div>
+      </div>
+      <div class="about-feat">
+        <div class="feat-icon">🎨</div>
+        <div>
+          <div class="feat-title">Собственный дизайн</div>
+          <div class="feat-desc">Подставки и органайзеры созданы вместе с локальными мастерами. Уникальные позиции, которых нет у конкурентов.</div>
+        </div>
+      </div>
+      <div class="about-feat">
+        <div class="feat-icon">🎁</div>
+        <div>
+          <div class="feat-title">Готовые Eco-Desk наборы</div>
+          <div class="feat-desc">Комплекты для рабочего места и корпоративные подарочные наборы в биоразлагаемой упаковке.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRODUCTS ─── -->
+<section id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-label">Каталог</div>
+      <h2 class="section-title" style="margin-bottom:0">Товары GreenDesk</h2>
+    </div>
+    <a href="#lead" class="btn-outline" style="white-space:nowrap">Весь каталог →</a>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card featured">
+      <div class="product-img product-img-organizer">
+        <div class="product-tag">🏆 #1 продаж</div>
+        🗂️
+      </div>
+      <div class="product-body">
+        <div class="product-name">Органайзер Eco Oak</div>
+        <div class="product-desc">Деревянный органайзер для рабочего стола из дуба. Три секции для канцелярии, телефон-подставка, кабель-менеджер. Собственный дизайн.</div>
+        <div class="product-meta">
+          <div class="product-price">от 1 890 ₽ <span>/ шт.</span></div>
+          <a href="#lead" class="product-btn">Заказать</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img product-img-lamp">
+        <div class="product-tag green">🌿 Эко</div>
+        💡
+      </div>
+      <div class="product-body">
+        <div class="product-name">Лампа BambooLight</div>
+        <div class="product-desc">Настольная лампа из бамбукового шпона с тёплым светодиодным светом. Регулировка яркости, USB-зарядка, матовый плафон.</div>
+        <div class="product-meta">
+          <div class="product-price">2 350 ₽ <span>/ шт.</span></div>
+          <a href="#lead" class="product-btn">Заказать</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img product-img-kit">
+        <div class="product-tag">🎁 Подарок</div>
+        📦
+      </div>
+      <div class="product-body">
+        <div class="product-name">Набор Eco-Desk Setup</div>
+        <div class="product-desc">Комплект: органайзер + подставка для ноутбука + блокнот из крафт-бумаги. Биоразлагаемая подарочная упаковка.</div>
+        <div class="product-meta">
+          <div class="product-price">4 990 ₽ <span>/ набор</span></div>
+          <a href="#lead" class="product-btn">Заказать</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem">
+    <div class="section-label" style="margin-bottom:1rem">Также в каталоге</div>
+    <div class="products-row2">
+      <div class="product-card product-card-small">
+        <div class="product-small-icon">📓</div>
+        <div>
+          <div class="product-small-name">Многоразовые канцтовары</div>
+          <div class="product-small-price">от 490 ₽</div>
+        </div>
+      </div>
+      <div class="product-card product-card-small">
+        <div class="product-small-icon">🖥️</div>
+        <div>
+          <div class="product-small-name">Подставка под монитор</div>
+          <div class="product-small-price">от 1 490 ₽</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHY ─── -->
+<section id="why">
+  <div>
+    <div class="section-label">Почему GreenDesk</div>
+    <h2 class="section-title">Больше, чем просто<br>канцелярия</h2>
+    <p class="section-sub">
+      Мы не продаём «дешёвую канцелярию». Каждый предмет — это инвестиция в комфорт, эстетику и планету. Вот почему нас выбирают.
+    </p>
+    <a href="#lead" class="btn-primary">Начать выбор</a>
+  </div>
+  <div class="why-grid">
+    <div class="why-card highlight">
+      <div class="why-icon">🏷️</div>
+      <div class="why-title" style="color:white">Цены — как у конкурентов</div>
+      <div class="why-text">Экологичность не значит дорого. Средний чек — 1 800–2 500 ₽, при этом качество материалов и дизайна — выше рынка.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🏅</div>
+      <div class="why-title">Сертифицированные материалы</div>
+      <div class="why-text">Все товары подтверждены документами FSC, OEKO-TEX, GreenGuard. Никакого маркетинга — только реальная экология.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🚚</div>
+      <div class="why-title">Доставка по России и СНГ</div>
+      <div class="why-text">Москва, СПб, Екатеринбург, Новосибирск и весь СНГ. Быстрая доставка и безопасная упаковка без пластика.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">✏️</div>
+      <div class="why-title">Индивидуальный дизайн</div>
+      <div class="why-text">Хотите что-то уникальное? Разработаем товар по вашему запросу. Идеально для корпоративных подарков.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CERTS ─── -->
+<section id="certs">
+  <div class="section-label">Доверие и качество</div>
+  <h2 class="section-title">Сертификаты и стандарты</h2>
+  <p class="section-sub">Каждый товар в нашем каталоге проходит проверку. Мы работаем только с производителями, которые соответствуют международным экологическим стандартам.</p>
+
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-icon">🌳</div>
+      <div class="cert-name">FSC</div>
+      <div class="cert-desc">Лесной попечительский совет. Устойчивое управление лесами.</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🧶</div>
+      <div class="cert-name">OEKO-TEX</div>
+      <div class="cert-desc">Отсутствие вредных химических веществ в текстиле.</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🏠</div>
+      <div class="cert-name">GreenGuard</div>
+      <div class="cert-desc">Безопасность для помещений. Минимальные выбросы VOC.</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">♻️</div>
+      <div class="cert-name">Recycled Content</div>
+      <div class="cert-desc">Подтверждённое содержание вторичных и переработанных материалов.</div>
+    </div>
+  </div>
+
+  <div class="certs-strip">
+    <div class="strip-item">📦 <strong>Упаковка</strong>&nbsp;без пластика</div>
+    <div class="strip-item">🌱 <strong>Натуральные</strong>&nbsp;красители</div>
+    <div class="strip-item">🤝 <strong>Локальные</strong>&nbsp;мастера</div>
+    <div class="strip-item">🔄 <strong>Переработанные</strong>&nbsp;материалы</div>
+    <div class="strip-item">📋 <strong>Документы</strong>&nbsp;на каждый товар</div>
+  </div>
+</section>
+
+<!-- ─── REVIEWS ─── -->
+<section id="reviews">
+  <div style="text-align:center; margin-bottom:3rem">
+    <div class="section-label" style="justify-content:center"><span style="display:none"></span>Отзывы</div>
+    <h2 class="section-title">Что говорят<br>наши клиенты</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-tag">Фрилансер</div>
+      <span class="review-quote">"</span>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Заказала органайзер и подставку для ноутбука. Качество выше ожиданий — дуб плотный, отделка аккуратная. Рабочий стол наконец выглядит как в Pinterest. Упаковка полностью картонная — никакого пластика. Очень приятно.</div>
+      <div class="review-author">
+        <div class="review-avatar av1">👩</div>
+        <div>
+          <div class="review-name">Анастасия Волкова</div>
+          <div class="review-role">Дизайнер-фрилансер, Москва</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-tag">B2B заказ</div>
+      <span class="review-quote">"</span>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Закупали корпоративные подарки для отдела — 20 наборов Eco-Desk Setup. Менеджер помог с оформлением, успели к дедлайну. Сотрудники были приятно удивлены. Уже планируем второй заказ к Новому году.</div>
+      <div class="review-author">
+        <div class="review-avatar av2">👨‍💼</div>
+        <div>
+          <div class="review-name">Дмитрий Кравченко</div>
+          <div class="review-role">HR-директор, ИТ-компания, СПб</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-tag">Студент</div>
+      <span class="review-quote">"</span>
+      <div class="review-stars">★★★★☆</div>
+      <div class="review-text">Взял лампу и канцелярский блокнот. Лампа — огонь, тёплый свет и зарядка USB прямо в основании. Крафтовый блокнот немного тонкий, но для ежедневных заметок — в самый раз. Буду заказывать ещё.</div>
+      <div class="review-author">
+        <div class="review-avatar av3">🧑‍🎓</div>
+        <div>
+          <div class="review-name">Максим Горелов</div>
+          <div class="review-role">Студент, Екатеринбург</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-tag">Офис</div>
+      <span class="review-quote">"</span>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Оформляли новый переговорный зал и кабинет директора. Подставки под мониторы и органайзеры вписались идеально. Всё в одном стиле, натуральные материалы, запаха нет — коллеги постоянно спрашивают откуда вещи.</div>
+      <div class="review-author">
+        <div class="review-avatar av4">👩‍💻</div>
+        <div>
+          <div class="review-name">Ирина Семёнова</div>
+          <div class="review-role">Офис-менеджер, Новосибирск</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section id="faq">
+  <div class="faq-layout">
+    <div>
+      <div class="section-label">Частые вопросы</div>
+      <h2 class="section-title">Ответим на всё<br>перед покупкой</h2>
+      <p class="section-sub">Собрали самые популярные вопросы от наших покупателей. Если не нашли ответ — напишите нам.</p>
+      <a href="#lead" class="btn-primary" style="margin-top:1rem">Задать вопрос</a>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Из каких материалов сделаны товары?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Мы используем дуб, бамбук, вторично переработанную древесину и крафт-бумагу. Все материалы сертифицированы по стандартам FSC, OEKO-TEX и GreenGuard. Документы можно запросить к любому товару. Никакого MDF с формальдегидом — только натуральное.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Есть ли доставка в мой регион?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Доставляем по всей России — Москва, Санкт-Петербург, Екатеринбург, Новосибирск и другие города. Также доставка в страны СНГ. Сроки: 2–5 рабочих дней по России, 7–14 дней по СНГ. Доставка в Москву и СПб — часто на следующий день.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Можно ли заказать в подарок с упаковкой?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Да! Все наборы Eco-Desk Setup уже поставляются в красивой биоразлагаемой подарочной коробке. Для отдельных товаров можно добавить крафт-упаковку при оформлении заказа. Для корпоративных заказов от 5 штук — возможна брендированная упаковка с логотипом.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Как убедиться в качестве до покупки?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Запросите сертификаты через форму на сайте — пришлём PDF. Также доступны подробные фото и видео каждого товара. Если товар не понравится при получении, принимаем возврат в течение 14 дней без объяснения причин.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Можно ли сделать корпоративный заказ?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Конечно! Работаем с B2B-клиентами: офисы, коворкинги, HR-отделы. Корпоративные скидки от 10 единиц, возможен кастомный дизайн с логотипом. Оплата по счёту, документы для бухгалтерии. Напишите нам — рассчитаем КП в течение 2 часов.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Экологичные товары — это правда или маркетинг?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Мы понимаем этот скептицизм. Именно поэтому к каждому товару есть реальные сертификаты от независимых организаций. Мы не печатаем значок «эко» просто так — это подтверждённый факт. Запросите документы и убедитесь сами.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA BAND ─── -->
+<section id="cta-band">
+  <div class="cta-band-label">Специальное предложение</div>
+  <h2 class="cta-band-title">Скидка 10% на первый заказ<br>при оформлении заявки сегодня</h2>
+  <p class="cta-band-sub">Обустройте рабочее место мечты с GreenDesk. Бесплатная консультация по подбору товаров для вашего пространства.</p>
+  <div class="cta-band-actions">
+    <a href="#lead" class="btn-white">Получить скидку 10%</a>
+    <a href="#products" class="btn-ghost">Смотреть каталог</a>
+  </div>
+</section>
+
+<!-- ─── LEAD FORM ─── -->
+<section id="lead">
+  <div class="lead-layout">
+    <div class="lead-info">
+      <div class="section-label">Связаться с нами</div>
+      <h2 class="section-title">Оставьте заявку —<br>ответим за 2 часа</h2>
+      <p class="section-sub">
+        Подберём товары под ваш запрос, рассчитаем стоимость доставки и ответим на любые вопросы. Для корпоративных клиентов — персональный менеджер.
+      </p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-label">Телефон</div>
+            <div class="contact-value">+7 (800) 555-GreenDesk</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e28a878e8e8da2859087878c86879189cc9097">[email&#160;protected]</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✈️</div>
+          <div>
+            <div class="contact-label">Telegram</div>
+            <div class="contact-value">@greendesk_shop</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lead-form-wrapper">
+      <div class="form-title">Оставить заявку</div>
+      <div class="form-sub">Заполните форму и мы свяжемся с вами в ближайшее время</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ваше имя *</label>
+          <input type="text" id="f-name" placeholder="Иван Иванов" />
+        </div>
+        <div class="form-group">
+          <label>Телефон</label>
+          <input type="tel" id="f-phone" placeholder="+7 (___) ___-__-__" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="f-email" placeholder="ivan@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Тип заказа</label>
+        <select id="f-type">
+          <option value="">Выберите...</option>
+          <option>Для себя / домашнего офиса</option>
+          <option>Корпоративный заказ / B2B</option>
+          <option>Подарочный набор</option>
+          <option>Консультация по подбору</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Ваш вопрос или запрос</label>
+        <textarea id="f-msg" placeholder="Расскажите, что вас интересует — мы поможем с выбором..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">🌿 Отправить заявку</button>
+      <div class="success-msg" id="successMsg">✅ Спасибо! Мы свяжемся с вами в течение 2 часов.</div>
+      <div class="form-privacy">Нажимая «Отправить», вы соглашаетесь с политикой обработки персональных данных. Мы не передаём данные третьим лицам.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Green<span>Desk</span></div>
+      <div class="footer-desc">Экологичные и стильные товары для рабочего пространства. Дерево, бамбук и переработанные материалы.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Каталог</h4>
+      <ul>
+        <li><a href="#products">Органайзеры</a></li>
+        <li><a href="#products">Настольные лампы</a></li>
+        <li><a href="#products">Канцтовары</a></li>
+        <li><a href="#products">Подарочные наборы</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Компания</h4>
+      <ul>
+        <li><a href="#about">О GreenDesk</a></li>
+        <li><a href="#certs">Сертификаты</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <ul>
+        <li><a href="#lead">Оставить заявку</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#59313c353536193e2b3c3c373d3c2a32772b2c"><span class="__cf_email__" data-cfemail="48202d242427082f3a2d2d262c2d3b23663a3d">[email&#160;protected]</span></a></li>
+        <li><a href="#">Telegram-канал</a></li>
+        <li><a href="#">Мах</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 GreenDesk. Все права защищены. 🌱 Продукция сертифицирована.</div>
+    <div class="footer-social">
+      <a class="social-btn" href="#" title="Telegram">✈️</a>
+      <a class="social-btn" href="#" title="VK">🔵</a>
+      <a class="social-btn" href="#" title="Мах">🤩</a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // FAQ toggle
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Form submit
+  function submitForm() {
+    const name = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    if (!name || !email) {
+      alert('Пожалуйста, заполните обязательные поля: Имя и Email.');
+      return;
+    }
+    document.getElementById('successMsg').style.display = 'block';
+    document.querySelector('.form-submit').disabled = true;
+    document.querySelector('.form-submit').style.opacity = '0.5';
+    document.querySelector('.form-submit').textContent = '✓ Заявка отправлена';
+  }
+
+  // Intersection observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.product-card, .why-card, .cert-card, .review-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
